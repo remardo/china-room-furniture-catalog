@@ -20,7 +20,7 @@
 <body>
 <div class="noise"></div>
 <header class="hero"><div class="wrap"><div class="topline"><span>China Room / sourcing desk</span><span>Срез цен · 28 августа 2026</span></div><h1>Мебельный <em>радар</em></h1><div class="hero-copy"><p>2200 предложений Made-in-China в 11 сегментах. Новые категории отобраны по сочетанию премиального вида, проектной цены с логистикой и запаса относительно российского рынка.</p><div class="stamp">200 × 11<br>позиций<br>с ценами</div></div></div></header>
-<details class="calc" open><summary class="wrap"><span>Параметры расчёта</span><span>изменить ↘</span></summary><div class="wrap calc-grid">
+<details id="calcPanel" class="calc" open><summary class="wrap"><span>Параметры расчёта</span><span id="calcToggleText">Скрыть ↑</span></summary><div class="wrap calc-grid">
   <div class="field"><label for="rate">Курс USD/RUB</label><div><input id="rate" type="number" min="1" step=".1" value="82"><i>₽</i></div></div>
   <div class="field"><label for="china">Доставка по Китаю</label><div><input id="china" type="number" min="0" step=".1" value="3"><i>%</i></div></div>
   <div class="field"><label for="packing">Консолидация и упаковка</label><div><input id="packing" type="number" min="0" step=".1" value="2"><i>%</i></div></div>
@@ -44,6 +44,7 @@
 const products=JSON.parse(document.getElementById('catalog-data').textContent),pageSize=24;
 const state={segment:'all',query:'',sort:'rank',page:1};
 const CART_KEY='china-room-procurement-v1';let cart={};try{cart=JSON.parse(localStorage.getItem(CART_KEY))||{}}catch{}
+const calcPanel=document.getElementById('calcPanel'),calcToggleText=document.getElementById('calcToggleText'),CALC_KEY='china-room-calc-open';try{if(localStorage.getItem(CALC_KEY)==='0')calcPanel.open=false}catch{}function syncCalc(){calcToggleText.textContent=calcPanel.open?'Скрыть ↑':'Показать ↓'}calcPanel.addEventListener('toggle',()=>{syncCalc();try{localStorage.setItem(CALC_KEY,calcPanel.open?'1':'0')}catch{}});syncCalc();
 const ids=['rate','china','packing','intl','duty','broker','russia','reserve','vat','markup'];
 const params=()=>Object.fromEntries(ids.map(id=>[id,Math.max(0,Number(document.getElementById(id).value)||0)]));
 function estimate(usd){const p=params(),factory=usd*p.rate,china=factory*p.china/100,packing=factory*p.packing/100,intl=factory*p.intl/100,customs=factory+china+packing+intl,duty=customs*p.duty/100,vat=(customs+duty)*p.vat/100,extras=factory*(p.broker+p.russia+p.reserve)/100,landed=factory+china+packing+intl+duty+vat+extras;return landed*(1+p.markup/100)}
