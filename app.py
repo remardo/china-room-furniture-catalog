@@ -318,4 +318,4 @@ if __name__ == "__main__":
         init_db()
         if not ADMIN_PASSWORD:
             print("WARNING: ADMIN_PASSWORD is empty; admin API is disabled", flush=True)
-        ThreadingHTTPServer(("0.0.0.0", int(os.environ.get("PORT", "8000"))), Handler).serve_forever()
+        ThreadingHTTPServer(("0.0.0.0", int(os.environ.get("PORT", "80"))), Handler).serve_forever()
